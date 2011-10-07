@@ -5,12 +5,17 @@ def system!(*args)
 end
 
 args = ARGV.join(' ')
+
+puts "Dumping schema..."
 system! "mysqldump -d #{args} >schema.sql"
+
+puts "Listing tables..."
 system! "mysql #{args} -e'SHOW TABLE STATUS' >status.txt"
 
-pv = `which pv`.chomp
+pv_path = `which pv`.chomp
 
 CSV.foreach("status.txt", :headers => true, :col_sep => "\t") do |table|
-  pv_command = "| #{pv} -N #{table["Name"]} -s #{table["Data_length"]}" if !pv.empty?
+  puts "Dumping #{table["Name"]}"
+  pv_command = "| #{pv_path} -l -s #{table["Rows"]}" if !pv_path.empty?
   system! "mysql #{args} -N -e'SELECT * FROM #{table["Name"]}' #{pv_command} >#{table["Name"]}.txt"
 end
