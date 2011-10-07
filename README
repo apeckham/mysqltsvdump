@@ -1,5 +1,7 @@
 Dump all MySQL tables to TSV files, even if they're on a remote server. (Normal mysqldump only allows tab-separated dumps if you're running mysqldump on the same machine as the mysql server.)
 
-Usage: ruby run.rb -uroot -ppassword my_database
+Usage: ruby mysqltsvdump.rb -uroot -ppassword my_database
 
 Takes the same flags as mysql (--host, --port, etc)
+
+Requires ruby 1.9.2
